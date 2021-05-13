@@ -48,8 +48,8 @@ export default class Register extends Component {
             city: this.state.city,
             address: this.state.address,
         }
-        
-        const res = await axios.post('http://localhost:4001/register', newRegister)
+        //Request backend
+        const res = await axios.post(process.env.REACT_APP_URL_BACKEND + 'register', newRegister)
         console.log(res);
         //redirect
         //window.location.href = '/'

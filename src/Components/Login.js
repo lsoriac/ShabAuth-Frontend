@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import UAParser from "ua-parser-js";
+
 import axios from 'axios'
 
 export default class Login extends Component {
@@ -15,35 +16,39 @@ export default class Login extends Component {
         })
     }
     async componentDidMount() {
-  
+        console.log(process.env.REACT_APP_URL_BACKEND);
     }
     onSubmit = async e => {
         e.preventDefault();
         var parser = new UAParser();
         //console.log(parser.getResult());
-       // console.log(parser.getBrowser().name);
+        // console.log(parser.getBrowser().name);
         //console.log(parser.getDevice().model);
-        let device=""
-        if(parser.getDevice().model===undefined){
+        let device = ""
+        if (parser.getDevice().model === undefined) {
             device = "PC"
-        }else{
-            device = parser.getDevice().vendor+" - "+parser.getDevice().model+" - "+parser.getDevice().type
+        } else {
+            device = parser.getDevice().vendor + " - " + parser.getDevice().model + " - " + parser.getDevice().type
         }
-         
+
         const newLogin = {
             email: this.state.email,
             password: this.state.pass_user,
             timestamp: "Pendiente de enviar",
-            device ,
+            device,
             browser: parser.getBrowser().name
         }
         console.log(newLogin);
-        
-        const res = await axios.post('http://localhost:4001/login', newLogin)
-        console.log(res);
-         //redirect
-          window.location.href = '/authentication'
-          
+        //Request backend
+        const res = await axios.post(process.env.REACT_APP_URL_BACKEND + 'login', newLogin)
+        console.log(res.data.success);
+        //correct login (success = true)
+        if (res.data.success === true) {
+            //redirect
+            window.location.href = '/authentication'
+        } else {
+            console.log("Credenciales incorrectas");
+        }
     }
 
     render() {
@@ -68,8 +73,8 @@ export default class Login extends Component {
                                     className="form-control"
                                     value={this.state.email}
                                     onChange={this.onChangeInput}
-                                    placeholder="Correo electrónico" 
-                                    required/>
+                                    placeholder="Correo electrónico"
+                                />
                             </div>
 
                             <div className="input-group mb-2">
@@ -85,8 +90,8 @@ export default class Login extends Component {
                                     value={this.state.pass_user}
                                     className="form-control"
                                     onChange={this.onChangeInput}
-                                    placeholder="Contraseña" 
-                                    required/>
+                                    placeholder="Contraseña"
+                                />
                             </div>
                             {/*redirect*/}
                             <span style={{ fontSize: "11px" }}>

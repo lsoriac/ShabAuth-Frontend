@@ -13,6 +13,7 @@ export default class Autentication extends Component {
             auth: this.state.auth.name,
             content: this.state.content[0]
         }
+        console.log(newMail);
         /*
         console.log(newMail);
         const res2 = await axios.post('http://localhost:4000/send-email', newMail)
