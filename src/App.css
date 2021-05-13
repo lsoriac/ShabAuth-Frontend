@@ -1,38 +1,72 @@
-.App {
-  text-align: center;
+html {
+    height: 100%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+    height: 100%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+div#root {
+    height: 100%;
+    /* remove this line to see div.app is no more 100% height */
+    background-color: #f5f5f5;
+    font-family: 'Roboto', sans-serif;
+    padding: 0 0;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
+div.app {
+    height: 100%;
+    background-color: rgb(150, 120, 0);
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+a.navbar-brand {
+    display: block;
+    color: white;
+    text-decoration: none;
+    position: relative;
+}
+
+a.navbar-brand::after {
+    content: "";
+    background: rgb(53, 12, 12);
+    mix-blend-mode: exclusion;
+    width: calc(100% + 20px);
+    height: 0;
+    position: absolute;
+    bottom: -4px;
+    left: -10px;
+    transition: all .3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    border-radius: 25px;
+}
+
+a.navbar-brand:hover::after {
+    height: calc(100% + 8px)
+}
+
+button.btn-primary {
+    background-color: rgb(25, 118, 210);
+}
+
+div.card-header {
+    background-color: rgb(255, 255, 255);
+    color: rgb(29, 58, 87);
+}
+
+svg.icons-fields {
+    fill: rgb(25, 118, 210);
+}
+
+.popup-content {
+    font-size: 9px;
+    height: 55px;
+    min-width: 320px;
 }

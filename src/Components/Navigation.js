@@ -5,8 +5,8 @@ export default class Navigation extends Component {
 
     render() {
         return (
-            <nav className="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: "rgb(50,50,50)" }}>
-                <Link className="navbar-brand" to="/">ShapAuth
+            <nav id= "navigation" className="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: "rgb(25,118,210)" }}>
+                <Link className="navbar-brand" to="/">ShabAuth
                 </Link>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <svg xmlns="http://www.w3.org/2000/svg" width="27" fill="currentColor" className="bi bi-caret-down-square" viewBox="0 0 16 16">
@@ -24,6 +24,11 @@ export default class Navigation extends Component {
                             <Link className="navbar-brand" to="/login">Iniciar Sesión
                         </Link>
                         </li>
+                        <li style={{ marginLeft: "20px" }} className="nav-item" id="authentication">
+                            <Link className="navbar-brand" to="/authentication">Test autenticación
+                        </Link>
+                        </li>
+                        
                     </ul>
                 </div>
             </nav>

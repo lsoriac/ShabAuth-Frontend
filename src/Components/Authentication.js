@@ -1,25 +1,49 @@
 import React, { Component } from 'react'
 //import { Link } from 'react-router-dom'
-//import axios from 'axios'
+import axios from 'axios'
 
 export default class Autentication extends Component {
     state = {
         auth: [],
-        content: []
+        content: [],
+        selectedFile: null
     }
+    onFileChange = event => {
+        // Update the state 
+        this.setState({ selectedFile: event.target.files[0] });
+    };
     onSubmit = async e => {
         e.preventDefault();
         const newMail = {
             auth: this.state.auth.name,
             content: this.state.content[0]
         }
-        console.log(newMail);
-        /*
-        console.log(newMail);
-        const res2 = await axios.post('http://localhost:4000/send-email', newMail)
+
+        //console.log(newMail);
+        //const res2 = await axios.post(process.env.REACT_APP_URL_BACKEND +'authfile', newMail)
         //console.log("aaaaaaa", res2);
-*/
+
     }
+    onFileUpload = () => {
+        // Create an object of formData 
+        const formData = new FormData();
+
+        // Update the formData object 
+        formData.append(
+            "myShab",
+            this.state.selectedFile,
+            this.state.selectedFile.name,
+            
+        );
+
+        // Details of the uploaded file 
+        console.log(this.state.selectedFile);
+
+        // Request made to the backend api 
+        // Send formData object 
+        const res2 = axios.post(process.env.REACT_APP_URL_BACKEND +'authfile', formData)
+
+    };
 
     //event chance typing
     onChangeInput = (e) => {
@@ -44,9 +68,8 @@ export default class Autentication extends Component {
         this.setState({ content: contenido })
     }
     async componentDidMount() {
-
+        console.log(Date.now());
     }
-
 
     render() {
         return (
@@ -65,17 +88,16 @@ export default class Autentication extends Component {
                                 </div>
                                 <input
                                     id="auth"
-                                    name="auth"
+                                    name="myShab"
                                     type="file"
                                     className="form-control"
                                     //value={this.state.auth}
-                                    onChange={this.onChangeInput}
+                                    onChange={this.onFileChange}
                                 />
                             </div>
 
 
-
-                            <button type="submit" className="btn btn-primary btn-block" style={{ marginTop: "60px" }}>Enviar</button>
+                            <button onClick={this.onFileUpload} className="btn btn-primary btn-block" style={{ marginTop: "60px" }}>Enviar</button>
                         </div>
                     </form>
                 </div>

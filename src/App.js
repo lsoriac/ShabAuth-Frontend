@@ -9,11 +9,13 @@ import Navigation from './Components/Navigation';
 import Login from './Components/Login'
 import Register from './Components/Register';
 import Authentication from './Components/Authentication';
+import IndexPage from './Components/IndexPage'
 
 function App() {
   return (
     <Router>
         <Navigation/>
+        <Route path="/" exact component={IndexPage} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/authentication" component={Authentication} />

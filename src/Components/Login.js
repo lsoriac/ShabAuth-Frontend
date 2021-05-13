@@ -5,6 +5,7 @@ import UAParser from "ua-parser-js";
 import axios from 'axios'
 
 export default class Login extends Component {
+    
     state = {
         email: '',
         pass_user: ''
@@ -16,7 +17,8 @@ export default class Login extends Component {
         })
     }
     async componentDidMount() {
-        console.log(process.env.REACT_APP_URL_BACKEND);
+        //console.log(process.env.REACT_APP_URL_BACKEND);
+        document.getElementById("navigation").style.display="none"
     }
     onSubmit = async e => {
         e.preventDefault();
@@ -53,16 +55,17 @@ export default class Login extends Component {
 
     render() {
         return (
-            <div className="container p-4" style={{ height: "200px", width: "322px", marginTop: "150px", marginBottom: "370px" }}>
-                <div className="card text-center">
+            <div className="container p-4" style={{ height: "200px", width: "350px",  textAlign: "center"}}>
+                <span style={{fontSize:"30px", opacity:"0.6"}}><b>Shab Auth</b></span>
+                <div className="card text-center" style={{marginTop:"100px", border:"none"}}>
                     <div className="card-header">
-                        <h4>Login</h4>
+                        <h5>Login</h5>
                     </div>
                     <form onSubmit={this.onSubmit}>
                         <div className="card-body">
                             <div className="input-group mb-2" style={{ marginTop: "30px" }}>
                                 <div className="input-group-prepend">
-                                    <div className="input-group-text" ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="rgb(0,0,0)" className="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                    <div className="input-group-text" ><svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="rgb(0,0,0)" className="icons-fields" viewBox="0 0 16 16">
                                         <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
                                     </svg></div>
                                 </div>
@@ -79,7 +82,7 @@ export default class Login extends Component {
 
                             <div className="input-group mb-2">
                                 <div className="input-group-prepend">
-                                    <div className="input-group-text" ><svg xmlns="http://www.w3.org/2000/svg" width="24" fill="rgb(0,0,0)" className="bi bi-key-fill" viewBox="0 0 16 16">
+                                    <div className="input-group-text" ><svg xmlns="http://www.w3.org/2000/svg" width="24" fill="rgb(0,0,0)" className="icons-fields" viewBox="0 0 16 16">
                                         <path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663a3.5 3.5 0 0 1-3.163 2zM2.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
                                     </svg></div>
                                 </div>
@@ -96,17 +99,12 @@ export default class Login extends Component {
                             {/*redirect*/}
                             <span style={{ fontSize: "11px" }}>
                                 <label>No tiene cuenta</label>
-                                <Link to="/register"> Cree una</Link>
+                                <Link to="/register"> Cree una.</Link>
                             </span>
-                            {/*Decide local Storage or session Storage */}
-                            <div className="form-check" style={{ marginTop: "36px", marginBottom: "25px" }}>
-                                <input className="form-check-input" type="checkbox" id="session" />
-                                <label className="form-check-label" htmlFor="session">
-                                    <span ><small > Mantener la sesión iniciada</small></span>
-                                </label>
-                            </div>
-                            <button type="submit" className="btn btn-primary btn-block">Ingresar</button>
+                           
+                            <button style={{marginTop: "50px"}} type="submit" className="btn btn-primary btn-block">Ingresar</button>
                         </div>
+                        
                     </form>
                 </div>
             </div>
