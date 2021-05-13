@@ -88,9 +88,19 @@ export default class Register extends Component {
             
         } else {
             //console.log("Manda Request");
-            this.setState({banModal:1, modalTitle: "Registro Exitoso", modalMsm: "Los datos se han registrado de forma correcta."})
+            
             //Request backend
             const res = await axios.post(process.env.REACT_APP_URL_BACKEND + 'register', newRegister)
+            if (res.data.success === true) {
+                //redirect
+                document.getElementById("modalAccept").style.display="block"
+                this.setState({banModal:1, modalTitle: "Registro Exitoso", modalMsm: "Los datos se han registrado de forma correcta."})
+               // window.location.href = '/authentication'
+            } else {
+                document.getElementById("modalAccept").style.display="none"
+                this.setState({banModal:0, modalTitle: "Fallo Registro", modalMsm: "Los datos no se han registrar"})
+               // console.log("Credenciales incorrectas");
+            }
             console.log(res);
             //redirect
             //window.location.href = '/'
