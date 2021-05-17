@@ -5,10 +5,13 @@ import UAParser from "ua-parser-js";
 import axios from 'axios'
 
 export default class Login extends Component {
-    
+
     state = {
         email: '',
-        pass_user: ''
+        pass_user: '',
+        modalTitle2: "",
+        modalMsm2: "",
+        banModal2: 0
     }
     //event chance typing
     onChangeInput = (e) => {
@@ -18,7 +21,7 @@ export default class Login extends Component {
     }
     async componentDidMount() {
         //console.log(process.env.REACT_APP_URL_BACKEND);
-        document.getElementById("navigation").style.display="none"
+        document.getElementById("navigation").style.display = "none"
     }
     onSubmit = async e => {
         e.preventDefault();
@@ -36,7 +39,7 @@ export default class Login extends Component {
         const newLogin = {
             email: this.state.email,
             password: this.state.pass_user,
-            timestamp: "Pendiente de enviar",
+            timestamp: Date.now(),
             device,
             browser: parser.getBrowser().name
         }
@@ -47,17 +50,45 @@ export default class Login extends Component {
         //correct login (success = true)
         if (res.data.success === true) {
             //redirect
-            window.location.href = '/authentication'
+            //redirect
+            document.getElementById("modalAccept2").style.display = "block"
+            this.setState({ banModal2: 1, modalTitle2: "Credenciales Correctas", modalMsm2: "Se ha enviado un archivo con extensión (.shab) al correo. Verifique." })
         } else {
-            console.log("Credenciales incorrectas");
+            document.getElementById("modalAccept2").style.display = "none"
+            this.setState({ banModal2: 0, modalTitle2: "Fallo Inicio de Sesión", modalMsm2: "Credenciales incorrectas" })
         }
     }
+    onclickModal(a) {
+        if (a === 1) {
+            window.location.href = '/authentication' //talves poner redireccion a algun correo
+        } else {
 
+        }
+    }
     render() {
         return (
-            <div className="container p-4" style={{ height: "200px", width: "350px",  textAlign: "center"}}>
-                <span style={{fontSize:"30px", opacity:"0.6"}}><b>Shab Auth</b></span>
-                <div className="card text-center" style={{marginTop:"100px", border:"none"}}>
+            <div className="container p-4" style={{ height: "200px", width: "350px", textAlign: "center" }}>
+                {/*Modal confirmation*/}
+                <div className="modal fade" id="exampleModal2" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel2">{this.state.modalTitle2}</h5>
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                {this.state.modalMsm2}
+                            </div>
+                            <div className="modal-footer">
+                                <button id="modalAccept2" type="button" className="btn btn-primary" onClick={() => this.onclickModal(this.state.banModal2)}>continuar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span style={{ fontSize: "30px", opacity: "0.6" }}><b>Shab Auth</b></span>
+                <div className="card text-center" style={{ marginTop: "100px", border: "none" }}>
                     <div className="card-header">
                         <h5>Login</h5>
                     </div>
@@ -65,7 +96,7 @@ export default class Login extends Component {
                         <div className="card-body">
                             <div className="input-group mb-2" style={{ marginTop: "30px" }}>
                                 <div className="input-group-prepend">
-                                    <div className="input-group-text" ><svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="rgb(0,0,0)" className="icons-fields" viewBox="0 0 16 16">
+                                    <div className="input-group-text" ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="rgb(0,0,0)" className="icons-fields" viewBox="0 0 16 16">
                                         <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
                                     </svg></div>
                                 </div>
@@ -101,10 +132,10 @@ export default class Login extends Component {
                                 <label>No tiene cuenta</label>
                                 <Link to="/register"> Cree una.</Link>
                             </span>
-                           
-                            <button style={{marginTop: "50px"}} type="submit" className="btn btn-primary btn-block">Ingresar</button>
+
+                            <button data-toggle="modal" data-target="#exampleModal2" style={{ marginTop: "50px" }} type="submit" className="btn btn-primary btn-block">Ingresar</button>
                         </div>
-                        
+
                     </form>
                 </div>
             </div>

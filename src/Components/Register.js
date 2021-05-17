@@ -13,11 +13,19 @@ export default class Register extends Component {
 
         fullName: '',
         id_card: '',
-        birth: '',
-        gender: 'Masculino',
-        gender_list: ["Maculino", "Femenino"],
-
+        civil_status: '',
+        civil_status_list: ["Estado Civil", "Soltero", "Casado", "Divorsiado", "Separado en proceso", "Viudo", "Concubinato", "Otro"],
+        instruction: '',
+        instruction_list: ["Instrucción", "Eduación Primaria", "Educación Secundaria", "Tercer Nivel"],
         profession: '',
+
+        etnia: '',
+        etnia_list: ["Etnia", "Mestizo", "Mulato", "Morisco", "Castizo", "Zambo", "Blanco", "Cholo", "Otra"],
+        gender: '',
+        gender_list: ["Género", "Maculino", "Femenino"],
+        birth: '',
+        nationality: '',
+        origin_country: '',
 
         email: '',
         cellPhone: '',
@@ -26,18 +34,23 @@ export default class Register extends Component {
         password: '',
         pass_confirm: '',
 
-        country: countries.countries[0].name_es,
+        country: '',
         city: '',
         address: '',
 
-        err_pass: 'Debe completar este campo',
+        password_err: 'Debe completar este campo',
         err_pass_user_confirm: 'Debe completar este campo',
+        id_card_err: 'Debe completar este campo',
+        email_err: 'Debe completar este campo',
+        cellPhone_err: 'Debe completar este campo',
+        username_err: 'Debe completar este campo',
 
-        list_fields: ["fullName", "id_card", "profession", "email", "cellPhone", "username", "city", "address"],
+        list_fields: ["fullName", "id_card", "profession", "email", "cellPhone", "username", "city", "address", "civil_status", "instruction", "etnia", "gender", "nationality", "origin_country", "country", "password"],
+
 
         modalTitle: "",
         modalMsm: "",
-        banModal:0
+        banModal: 0
     }
     onSubmit = async e => {
         e.preventDefault();
@@ -46,68 +59,84 @@ export default class Register extends Component {
             id_card: this.state.id_card,
             birth: this.state.birth.toString(),
             gender: this.state.gender,
-
             profession: this.state.profession,
-
+            civil_status: this.state.civil_status,
+            instruction: this.state.instruction,
+            etnia: this.state.etnia,
+            nationality: this.state.nationality,
+            origin_country: this.state.origin_country,
             email: this.state.email,
             cellPhone: this.state.cellPhone,
-
             username: this.state.username,
             password: this.state.password,
-
             country: this.state.country,
             city: this.state.city,
             address: this.state.address
         }
+        const obj_fiels_err = {
+            fullName: this.state.fullName,
+            id_card: this.state.id_card,
+            gender: this.state.gender,
+            profession: this.state.profession,
+            civil_status: this.state.civil_status,
+            instruction: this.state.instruction,
+            etnia: this.state.etnia,
+            nationality: this.state.nationality,
+            origin_country: this.state.origin_country,
+            email: this.state.email,
+            cellPhone: this.state.cellPhone,
+            username: this.state.username,
+            password: this.state.password,
+            country: this.state.country,
+            city: this.state.city,
+            address: this.state.address,
+            password: this.state.password
+        }
+        var list_fiels_err = []
         console.log(newRegister);
-        //Error control change
-        for (let i in this.state.list_fields) {
-            if (e.target.name === this.state.list_fields[i]) {
-                //message err
-                document.getElementById(this.state.list_fields[i]).style.borderColor = 'Green'
-                document.getElementById(this.state.list_fields[i] + '_err').style.display = 'none'
-            }
-        }
+
         let ban = 0
-
-        //console.log(newRegister);
-        for (let i in newRegister) {
-            if (newRegister[i] === "") {
-
+        for (let i in obj_fiels_err) {
+            if (obj_fiels_err[i] === "") {
                 ban = 1
-                //message err
-                // console.log(i,"+++",validRegister[i]);
-                // document.getElementById(validRegister[i]).style.borderColor = 'Red'
-                //document.getElementById(validRegister[i] + '_err').style.display = 'Block'
+                list_fiels_err.push(i)
             }
         }
+        console.log(list_fiels_err);
         if (ban === 1) {
             //console.log("Popup de que hay campos sin llenar");
-            document.getElementById("modalAccept").style.display="none"
-            this.setState({banModal:0, modalTitle: "Fallo Registro", modalMsm: "Los datos no se han registrado de forma correcta. Por favor revice que todos los campos este llenos"})
-            
+            document.getElementById("modalAccept").style.display = "none"
+            this.setState({ banModal: 0, modalTitle: "Fallo Registro", modalMsm: "Los datos no se han registrado de forma correcta. Por favor revice que todos los campos este llenos" })
+            for (let i in this.state.list_fields) {
+                for (let j = 0; j < list_fiels_err.length; j++) {
+                    if (list_fiels_err[j] === this.state.list_fields[i]) {
+                        //message err
+                        document.getElementById(this.state.list_fields[i]).style.borderColor = 'Red'
+                        document.getElementById(this.state.list_fields[i] + '_err').style.display = 'Block'
+                    }
+                }
+            }
         } else {
             //console.log("Manda Request");
-            
             //Request backend
             const res = await axios.post(process.env.REACT_APP_URL_BACKEND + 'register', newRegister)
             if (res.data.success === true) {
                 //redirect
-                document.getElementById("modalAccept").style.display="block"
-                this.setState({banModal:1, modalTitle: "Registro Exitoso", modalMsm: "Los datos se han registrado de forma correcta."})
-               // window.location.href = '/authentication'
+                document.getElementById("modalAccept").style.display = "block"
+                this.setState({ banModal: 1, modalTitle: "Registro Exitoso", modalMsm: "Los datos se han registrado de forma correcta." })
+
+                // window.location.href = '/authentication'
             } else {
-                document.getElementById("modalAccept").style.display="none"
-                this.setState({banModal:0, modalTitle: "Fallo Registro", modalMsm: "Los datos no se han registrar"})
-               // console.log("Credenciales incorrectas");
+                document.getElementById("modalAccept").style.display = "none"
+                this.setState({ banModal: 0, modalTitle: "Fallo Registro", modalMsm: "Los datos no se han registrar" })
+                // console.log("Credenciales incorrectas");
+
             }
             console.log(res);
             //redirect
             //window.location.href = '/'
-
             //console.log(newRegister);
         }
-
     }
     onChangeDateBirth = birth => {
         this.setState({ birth })
@@ -115,6 +144,7 @@ export default class Register extends Component {
 
     //event chance typing
     onChangeInput = (e) => {
+
         this.setState({
             [e.target.name]: e.target.value
         })
@@ -129,23 +159,23 @@ export default class Register extends Component {
         //Error control change
         if (e.target.name === "password") {
             document.getElementById('password').style.borderColor = 'Green'
-            document.getElementById('pass_user_err').style.display = 'None'
+            document.getElementById('password_err').style.display = 'None'
             if (this.validSegurityPass(document.getElementById("password").value)) {
-                this.setState({ err_pass: "Verificado" })
+                this.setState({ password_err: "Verificado" })
                 //icons svg
                 document.getElementById('check').style.display = "Inline"
                 document.getElementById('noCheck').style.display = "None"
                 //message
-                document.getElementById('pass_user_err').style.color = 'Green'
-                document.getElementById('pass_user_err').style.display = 'Block'
+                document.getElementById('password_err').style.color = 'Green'
+                document.getElementById('password_err').style.display = 'Block'
 
             } else {
                 //icons svg
                 document.getElementById('check').style.display = "None"
                 document.getElementById('noCheck').style.display = "Inline"
                 //message err
-                document.getElementById('pass_user_err').style.color = 'Red'
-                document.getElementById('pass_user_err').style.display = 'Block'
+                document.getElementById('password_err').style.color = 'Red'
+                document.getElementById('password_err').style.display = 'Block'
             }
             this.validPassError()
         }
@@ -155,6 +185,50 @@ export default class Register extends Component {
             document.getElementById('pass_user_confirm_err').style.display = 'None'
             this.validPassError()
         }
+        if (e.target.name === "id_card") {
+            if (this.validIdCard(document.getElementById("id_card").value) === true) {
+                //message err
+                document.getElementById('id_card').style.borderColor = 'Green'
+                document.getElementById('id_card_err').style.display = 'None'
+            } else {
+                document.getElementById('id_card_err').style.display = 'Block'
+            }
+        }
+        if (e.target.name === "email") {
+            let emailRegex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+            if (emailRegex.exec(e.target.value)) {
+                document.getElementById('email').style.borderColor = 'Green'
+                document.getElementById('email_err').style.display = 'None'
+            } else {
+                this.setState({ email_err: "Dirección de correo no válida" })
+                document.getElementById('email').style.borderColor = 'Red'
+                document.getElementById('email_err').style.display = 'Block'
+            }
+        }
+        if (e.target.name === "cellPhone") {
+            if (this.validCellPhone(document.getElementById("cellPhone").value) === true) {
+                //message err
+                document.getElementById('cellPhone').style.borderColor = 'Green'
+                document.getElementById('cellPhone_err').style.display = 'None'
+            } else {
+                this.setState({ cellPhone_err: "El número telefónico debe contener 10 dígitos" })
+                document.getElementById('cellPhone').style.borderColor = 'Red'
+                document.getElementById('cellPhone_err').style.display = 'Block'
+            }
+        }
+
+        if (e.target.name === "username") {
+            var noValido = /\s/;
+            if (noValido.exec(e.target.value)) {
+                this.setState({ username_err: "El nombre de usuario no debe contener espacios en blanco" })
+                document.getElementById('username').style.borderColor = 'Red'
+                document.getElementById('username_err').style.display = 'Block'
+            } else {
+                document.getElementById('username').style.borderColor = 'Green'
+                document.getElementById('username_err').style.display = 'None'
+            }
+        }
+      
     }
 
     changeFields(ban) {
@@ -165,7 +239,7 @@ export default class Register extends Component {
             document.getElementById('data_4')
         ]
         var titles_card = [
-            "Datos Personales", "Datos de Contacto", "Datos de Seguridad", "Datos de Localización"
+            "Datos Personales", "Datos de Origen", "Datos de Seguridad y Contacto", "Datos de Localización"
         ]
         for (let i = 0; i < 4; i++) {
             if (obj_fields[i].style.display === "block") {
@@ -245,31 +319,99 @@ export default class Register extends Component {
                 }
             }
             if (upper === false) {
-                this.setState({ err_pass: "Debe incluír almenos 1 letra Mayúscula" })
+                this.setState({ password_err: "Debe incluír almenos 1 letra Mayúscula" })
                 document.getElementById('password').style.borderColor = 'Red'
             }
             if (lower === false) {
-                this.setState({ err_pass: "Debe incluír almenos 1 letra Minúscula" })
+                this.setState({ password_err: "Debe incluír almenos 1 letra Minúscula" })
                 document.getElementById('password').style.borderColor = 'Red'
             }
             if (num === false) {
-                this.setState({ err_pass: "Debe incluír almenos 1 Número" })
+                this.setState({ password_err: "Debe incluír almenos 1 Número" })
                 document.getElementById('password').style.borderColor = 'Red'
             }
             if (character === false) {
-                this.setState({ err_pass: "Debe incluír almenos 1 Símbolo" })
+                this.setState({ password_err: "Debe incluír almenos 1 Símbolo" })
                 document.getElementById('password').style.borderColor = 'Red'
             }
             if (upper === true && lower === true && character === true && num === true) {
                 return true;
             }
         } else {
-            this.setState({ err_pass: "Mínimo de 8" })
+            this.setState({ password_err: "Mínimo de 8" })
             document.getElementById('password').style.borderColor = 'Red'
         }
         return false;
     }
+    validIdCard(cedula) {
+        //Preguntamos si la cedula consta de 10 digitos
+        if (cedula.length == 10) {
+            //Obtenemos el digito de la region que sonlos dos primeros digitos
+            var digito_region = cedula.substring(0, 2);
+            //Pregunto si la region existe ecuador se divide en 24 regiones
+            if (digito_region >= 1 && digito_region <= 24) {
+                // Extraigo el ultimo digito
+                var ultimo_digito = cedula.substring(9, 10);
+                //Agrupo todos los pares y los sumo
+                var pares = parseInt(cedula.substring(1, 2)) + parseInt(cedula.substring(3, 4)) + parseInt(cedula.substring(5, 6)) + parseInt(cedula.substring(7, 8));
+                //Agrupo los impares, los multiplico por un factor de 2, si la resultante es > que 9 le restamos el 9 a la resultante
+                var numero1 = cedula.substring(0, 1);
+                var numero1 = (numero1 * 2);
+                if (numero1 > 9) { var numero1 = (numero1 - 9); }
 
+                var numero3 = cedula.substring(2, 3);
+                var numero3 = (numero3 * 2);
+                if (numero3 > 9) { var numero3 = (numero3 - 9); }
+
+                var numero5 = cedula.substring(4, 5);
+                var numero5 = (numero5 * 2);
+                if (numero5 > 9) { var numero5 = (numero5 - 9); }
+
+                var numero7 = cedula.substring(6, 7);
+                var numero7 = (numero7 * 2);
+                if (numero7 > 9) { var numero7 = (numero7 - 9); }
+
+                var numero9 = cedula.substring(8, 9);
+                var numero9 = (numero9 * 2);
+                if (numero9 > 9) { var numero9 = (numero9 - 9); }
+
+                var impares = numero1 + numero3 + numero5 + numero7 + numero9;
+                //Suma total
+                var suma_total = (pares + impares);
+                //extraemos el primero digito
+                var primer_digito_suma = String(suma_total).substring(0, 1);
+                //Obtenemos la decena inmediata
+                var decena = (parseInt(primer_digito_suma) + 1) * 10;
+                //Obtenemos la resta de la decena inmediata - la suma_total esto nos da el digito validador
+                var digito_validador = decena - suma_total;
+                //Si el digito validador es = a 10 toma el valor de 0
+                if (digito_validador == 10)
+                    var digito_validador = 0;
+                //Validamos que el digito validador sea igual al de la cedula
+                if (digito_validador == ultimo_digito) {
+                    return true
+                } else {
+                    this.setState({ id_card_err: "La cédula es incorrecta" })
+                    document.getElementById('id_card').style.borderColor = 'Red'
+                }
+            } else {
+                // imprimimos en consola si la region no pertenece
+                this.setState({ id_card_err: "Esta cédula no pertenece a ninguna región" })
+                document.getElementById('id_card').style.borderColor = 'Red'
+            }
+        } else {
+            //imprimimos en consola si la cedula tiene mas o menos de 10 digitos
+            this.setState({ id_card_err: "la cédula debe contener 10 Dígitos" })
+            document.getElementById('id_card').style.borderColor = 'Red'
+        }
+        return false
+    }
+    validCellPhone(cell) {
+        if (cell.length === 10) {
+            return true
+        }
+        return false
+    }
     async componentDidMount() {
         document.getElementById("navigation").style.display = "none"
 
@@ -285,16 +427,12 @@ export default class Register extends Component {
 
         document.getElementById('btn_end').style.display = 'None'
 
-        document.getElementById('pass_user_err').style.display = 'None'
+        document.getElementById('password_err').style.display = 'None'
         document.getElementById('pass_user_confirm_err').style.display = 'None'
         document.getElementById('check').style.display = "None"
 
 
         document.getElementById('birth').style.border = 'None'
-
-        //default value select List
-        document.getElementById("gender").value = "Maculino"
-        document.getElementById("country").value = countries.countries[0].name_es
 
         //hidden errors
         for (let i in this.state.list_fields) {
@@ -302,19 +440,18 @@ export default class Register extends Component {
         }
     }
 
-onclickModal(a){
-    if(a===1){
-        window.location.href = '/login'
-    }else{
-        
+    onclickModal(a) {
+        if (a === 1) {
+            window.location.href = '/login'
+        } else {
+
+        }
     }
-   
-}
 
     render() {
         return (
             <div className="container p-4" style={{ height: "200px", width: "400px", textAlign: "center" }}>
-
+                {/*Modal confirmation*/}
                 <div className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
@@ -326,10 +463,9 @@ onclickModal(a){
                             </div>
                             <div className="modal-body">
                                 {this.state.modalMsm}
-      </div>
+                            </div>
                             <div className="modal-footer">
-                                <button id= "modalAccept" type="button" className="btn btn-primary" onClick={() => this.onclickModal(this.state.banModal)}>continuar</button>
-                               
+                                <button id="modalAccept" type="button" className="btn btn-primary" onClick={() => this.onclickModal(this.state.banModal)}>continuar</button>
                             </div>
                         </div>
                     </div>
@@ -385,7 +521,7 @@ onclickModal(a){
                                 <input
                                     id="id_card"
                                     name="id_card"
-                                    type="text"
+                                    type="number"
                                     className="form-control"
                                     onChange={this.onChangeInput}
                                     placeholder="Cédula"
@@ -397,28 +533,8 @@ onclickModal(a){
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16" >
                                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                                     </svg>
-                                    <small>Debe completar este campo</small>
+                                    <small>{this.state.id_card_err}</small>
                                 </span>
-                            </div>
-
-
-                            <div className="input-group mb-2 " >
-                                <div className="input-group-prepend">
-                                    <div className="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="rgb(0,0,0)" className="icons-fields" viewBox="0 0 16 16">
-                                        <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
-                                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-                                    </svg></div>
-                                </div>
-                                <div className="form-control" >
-                                    <DatePicker
-                                        id="birth"
-                                        name="birth"
-                                        selected={this.state.birth}
-                                        placeholderText="Fecha Nacimiento"
-                                        className="input-group-date"
-                                        onChange={this.onChangeDateBirth} //only when value has changed
-                                    />
-                                </div>
                             </div>
 
 
@@ -429,13 +545,47 @@ onclickModal(a){
                                     </svg></div>
                                 </div>
                                 <select className="form-control" onChange={this.onChangeInput}
-                                    name="gender"
-                                    id="gender">
+                                    name="civil_status"
+                                    id="civil_status">
                                     {
-                                        this.state.gender_list.map((p) =>
+                                        this.state.civil_status_list.map((p) =>
                                             (<option key={p} value={p} >{p}</option>))
                                     }
                                 </select>
+                            </div>
+                            {/*error 1*/}
+                            <div id="civil_status_err" style={{ color: "red" }}>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16" >
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                    </svg>
+                                    <small>Debe completar este campo</small>
+                                </span>
+                            </div>
+
+                            <div className="input-group mb-2" >
+                                <div className="input-group-prepend">
+                                    <div className="input-group-text"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="rgb(0,0,0)" className="icons-fields" viewBox="0 0 16 16">
+                                        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
+                                    </svg></div>
+                                </div>
+                                <select className="form-control" onChange={this.onChangeInput}
+                                    name="instruction"
+                                    id="instruction">
+                                    {
+                                        this.state.instruction_list.map((p) =>
+                                            (<option key={p} value={p} >{p}</option>))
+                                    }
+                                </select>
+                            </div>
+                            {/*error 1*/}
+                            <div id="instruction_err" style={{ color: "red" }}>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16" >
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                    </svg>
+                                    <small>Debe completar este campo</small>
+                                </span>
                             </div>
 
 
@@ -466,24 +616,25 @@ onclickModal(a){
                         </div>
 
 
-                        {/*Fields 2*/}
+                        {/*Fields 2 >*/}
                         <div className="card-body" id="data_2">
-                            <div className="input-group mb-2" style={{ marginTop: "30px" }} >
+                            <div className="input-group mb-2" style={{ marginTop: "30px" }}>
                                 <div className="input-group-prepend">
-                                    <div className="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="rgb(0,0,0)" className="icons-fields" viewBox="0 0 16 16">
-                                        <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
+                                    <div className="input-group-text"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="rgb(0,0,0)" className="icons-fields" viewBox="0 0 16 16">
+                                        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
                                     </svg></div>
                                 </div>
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    className="form-control"
-                                    onChange={this.onChangeInput}
-                                    placeholder="Correo electrónico" />
+                                <select className="form-control" onChange={this.onChangeInput}
+                                    name="etnia"
+                                    id="etnia">
+                                    {
+                                        this.state.etnia_list.map((p) =>
+                                            (<option key={p} value={p} >{p}</option>))
+                                    }
+                                </select>
                             </div>
-                            {/*error 4*/}
-                            <div id="email_err" style={{ color: "red" }}>
+                            {/*error 1*/}
+                            <div id="etnia_err" style={{ color: "red" }}>
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16" >
                                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
@@ -492,24 +643,95 @@ onclickModal(a){
                                 </span>
                             </div>
 
-
-                            <div className="input-group mb-2 " >
-                                <div className="input-group-prepend" >
-                                    <div className="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="icons-fields" viewBox="0 0 16 16">
-                                        <path d="M3 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V2zm6 11a1 1 0 1 0-2 0 1 1 0 0 0 2 0z" />
+                            <div className="input-group mb-2" >
+                                <div className="input-group-prepend">
+                                    <div className="input-group-text"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="rgb(0,0,0)" className="icons-fields" viewBox="0 0 16 16">
+                                        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
                                     </svg></div>
                                 </div>
-                                <input
-                                    id="cellPhone"
-                                    name="cellPhone"
-                                    type="number"
-                                    className="form-control"
-                                    onChange={this.onChangeInput}
-                                    placeholder="Celular"
-                                />
+                                <select className="form-control" onChange={this.onChangeInput}
+                                    name="gender"
+                                    id="gender">
+                                    {
+                                        this.state.gender_list.map((p) =>
+                                            (<option key={p} value={p} >{p}</option>))
+                                    }
+                                </select>
                             </div>
-                            {/*error 5*/}
-                            <div id="cellPhone_err" style={{ color: "red" }}>
+                            {/*error 1*/}
+                            <div id="gender_err" style={{ color: "red" }}>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16" >
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                    </svg>
+                                    <small>Debe completar este campo</small>
+                                </span>
+                            </div>
+
+                            <div className="input-group mb-2 " >
+                                <div className="input-group-prepend">
+                                    <div className="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="rgb(0,0,0)" className="icons-fields" viewBox="0 0 16 16">
+                                        <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
+                                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+                                    </svg></div>
+                                </div>
+                                <div className="form-control" >
+                                    <DatePicker
+                                        id="birth"
+                                        name="birth"
+                                        selected={this.state.birth}
+                                        placeholderText="Fecha Nacimiento"
+                                        className="input-group-date"
+                                        display="disabled"
+                                        onChange={this.onChangeDateBirth} //only when value has changed
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="input-group mb-2" >
+                                <div className="input-group-prepend">
+                                    <div className="input-group-text"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="rgb(0,0,0)" className="icons-fields" viewBox="0 0 16 16">
+                                        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
+                                    </svg></div>
+                                </div>
+                                <select className="form-control" onChange={this.onChangeInput}
+                                    name="origin_country"
+                                    id="origin_country">
+                                    <option key="pais_origen" value="" >País de Origen</option>
+                                    {
+                                        countries.countries.map((p) =>
+                                            (<option key={p.code} value={p.name_es} >{p.name_es}</option>))
+                                    }
+                                </select>
+                            </div>
+                            {/*error 1*/}
+                            <div id="origin_country_err" style={{ color: "red" }}>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16" >
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                    </svg>
+                                    <small>Debe completar este campo</small>
+                                </span>
+                            </div>
+
+                            <div className="input-group mb-2" >
+                                <div className="input-group-prepend">
+                                    <div className="input-group-text"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="rgb(0,0,0)" className="icons-fields" viewBox="0 0 16 16">
+                                        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
+                                    </svg></div>
+                                </div>
+                                <select className="form-control" onChange={this.onChangeInput}
+                                    name="nationality"
+                                    id="nationality">
+                                    <option key="nacionalidad" value="" >Nacionalidad</option>
+                                    {
+                                        countries.countries.map((p) =>
+                                            (<option key={p.code} value={p.name_es} >{p.name_es}</option>))
+                                    }
+                                </select>
+                            </div>
+                            {/*error 1*/}
+                            <div id="nationality_err" style={{ color: "red" }}>
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16" >
                                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
@@ -543,11 +765,59 @@ onclickModal(a){
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16" >
                                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                                     </svg>
-                                    <small>Debe completar este campo</small>
+                                    <small>{this.state.username_err}</small>
+                                </span>
+                            </div>
+
+                            <div className="input-group mb-2" >
+                                <div className="input-group-prepend">
+                                    <div className="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="rgb(0,0,0)" className="icons-fields" viewBox="0 0 16 16">
+                                        <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
+                                    </svg></div>
+                                </div>
+                                <input
+                                    id="email"
+                                    name="email"
+                                    type="text"
+                                    className="form-control"
+                                    onChange={this.onChangeInput}
+                                    placeholder="Correo electrónico" />
+                            </div>
+                            {/*error 4*/}
+                            <div id="email_err" style={{ color: "red" }}>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16" >
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                    </svg>
+                                    <small>{this.state.email_err}</small>
                                 </span>
                             </div>
 
 
+                            <div className="input-group mb-2 " >
+                                <div className="input-group-prepend" >
+                                    <div className="input-group-text"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="icons-fields" viewBox="0 0 16 16">
+                                        <path d="M3 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V2zm6 11a1 1 0 1 0-2 0 1 1 0 0 0 2 0z" />
+                                    </svg></div>
+                                </div>
+                                <input
+                                    id="cellPhone"
+                                    name="cellPhone"
+                                    type="number"
+                                    className="form-control"
+                                    onChange={this.onChangeInput}
+                                    placeholder="Celular"
+                                />
+                            </div>
+                            {/*error 5*/}
+                            <div id="cellPhone_err" style={{ color: "red" }}>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16" >
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                    </svg>
+                                    <small>{this.state.cellPhone_err}</small>
+                                </span>
+                            </div>
                             <div className="input-group mb-2" >
                                 <div className="input-group-prepend">
                                     <div className="input-group-text"> <svg xmlns="http://www.w3.org/2000/svg" width="24" fill="rgb(0,0,0)" className="icons-fields" viewBox="0 0 16 16">
@@ -565,7 +835,7 @@ onclickModal(a){
 
 
                             {/*error */}
-                            <div id="pass_user_err" style={{ color: "red" }}>
+                            <div id="password_err" style={{ color: "red" }}>
                                 <span>
                                     <svg id="noCheck" xmlns="http://www.w3.org/2000/svg" width="20" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16">
                                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
@@ -573,7 +843,7 @@ onclickModal(a){
                                     <svg id="check" xmlns="http://www.w3.org/2000/svg" width="20" fill="currentColor" className="bi bi-check" viewBox="0 0 16 16">
                                         <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
                                     </svg>
-                                    <small>{this.state.err_pass}</small>
+                                    <small>{this.state.password_err}</small>
                                 </span>
                             </div>
 
@@ -617,14 +887,24 @@ onclickModal(a){
                                 <select className="form-control" onChange={this.onChangeInput}
                                     name="country"
                                     id="country">
+                                    <option key="pais" value="" >País</option>
                                     {
                                         countries.countries.map((p) =>
+
                                             (<option key={p.code} value={p.name_es} >{p.name_es}</option>))
                                     }
                                 </select>
 
                             </div>
-                            {/*error 7 borrado*/}
+                            {/*error 1*/}
+                            <div id="country_err" style={{ color: "red" }}>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16" >
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                    </svg>
+                                    <small>Debe completar este campo</small>
+                                </span>
+                            </div>
 
                             <div className="input-group mb-2 " >
                                 <div className="input-group-prepend" >
@@ -685,8 +965,6 @@ onclickModal(a){
                                 <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
                             </svg>
                         </span>
-
-
                         <button data-toggle="modal" data-target="#exampleModal" id="btn_end" style={{ marginTop: "30px", background: "rgb(25, 118, 210)" }} type="submit" className="btn btn-primary btn-block">Finalizar</button>
                     </form>
                 </div>

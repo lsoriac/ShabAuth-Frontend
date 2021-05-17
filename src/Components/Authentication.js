@@ -20,11 +20,11 @@ export default class Autentication extends Component {
         }
 
         //console.log(newMail);
-        //const res2 = await axios.post(process.env.REACT_APP_URL_BACKEND +'authfile', newMail)
+        //const res2 = await axios.post('http://localhost:4001/authfile', newMail)
         //console.log("aaaaaaa", res2);
 
     }
-    onFileUpload = () => {
+    onFileUpload = async e => {
         // Create an object of formData 
         const formData = new FormData();
 
@@ -33,16 +33,33 @@ export default class Autentication extends Component {
             "myShab",
             this.state.selectedFile,
             this.state.selectedFile.name,
-            
+            this.state.selectedFile.timestamp = Date.now()
+
         );
 
         // Details of the uploaded file 
-        console.log(this.state.selectedFile);
+        //console.log(this.state.selectedFile);
 
         // Request made to the backend api 
         // Send formData object 
-        const res2 = axios.post(process.env.REACT_APP_URL_BACKEND +'authfile', formData)
+        let data = {}
+        //Request backend
+        const res = await axios.post(process.env.REACT_APP_URL_BACKEND + 'authfile', formData)
+        console.log(res)
+        if (res.data.success === true) {
+            console.log("Ha sido autenticado");
 
+            //create token on local storage
+            data = {
+                token: res.data.token
+            }
+            localStorage.setItem('login', JSON.stringify(data))
+            //redirect
+            window.location.href = '/private-page'
+        } else {
+            console.log("Hubo un error al confirmar el archivo");
+
+        }
     };
 
     //event chance typing
@@ -68,8 +85,54 @@ export default class Autentication extends Component {
         this.setState({ content: contenido })
     }
     async componentDidMount() {
-        console.log(Date.now());
+        /*
+        let{ headers, ban } = this.verifyAccessToken()
+        //Exist token on localStorage ??
+        console.log(ban);
+        if(ban === 1){
+
+        }else{
+            let res = {}
+            try {
+                res = await axios.get(process.env.REACT_APP_URL_BACKEND + 'verifytoken', { headers })
+                /////aquii talves enviar el estado de loged o NOLOGED
+                console.log(res);
+            } catch (e) {
+                console.log("errror", e);
+            }
+            //si es que el token sigue siendo válido (NO CADUCADO) -> redirigir a home O a PROVATE-PAGE
+            //caso contrario (CADUCADO) -> REDIRIGIR A LOGIN O A HOME
+            if (res !== {}) {
+                //correct login (success = true)
+                if (res.data.success === true) {  /////aquii talves enviar el estado de loged o NOLOGED
+                    console.log("loged");
+                    window.location.href = '/'
+                    //desaparecer iniciar sesión
+                } else {
+                    //redirect
+                    
+                }
+            } else {
+                
+            }
+        }*/
     }
+    verifyAccessToken = () => {
+        var headers = {}
+        let ban = 0
+        if (localStorage.getItem('login')) {
+            let a = JSON.parse(localStorage.getItem('login'))
+            headers = {
+                authorization: a.token
+            }
+        }
+        else {
+            ban = 1
+        }
+        return {headers, ban}
+    }
+
+
 
     render() {
         return (
@@ -91,12 +154,10 @@ export default class Autentication extends Component {
                                     name="myShab"
                                     type="file"
                                     className="form-control"
-                                    //value={this.state.auth}
+                                    accept=".shab"
                                     onChange={this.onFileChange}
                                 />
                             </div>
-
-
                             <button onClick={this.onFileUpload} className="btn btn-primary btn-block" style={{ marginTop: "60px" }}>Enviar</button>
                         </div>
                     </form>
