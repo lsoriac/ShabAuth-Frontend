@@ -92,7 +92,7 @@ export default class Register extends Component {
             address: this.state.address,
         }
         var list_fiels_err = []
-        console.log(newRegister);
+       // console.log(newRegister);
 
         let ban = 0
         for (let i in obj_fiels_err) {
@@ -101,7 +101,7 @@ export default class Register extends Component {
                 list_fiels_err.push(i)
             }
         }
-        console.log(list_fiels_err);
+       // console.log(list_fiels_err);
         if (ban === 1) {
             //console.log("Popup de que hay campos sin llenar");
             document.getElementById("modalAccept").style.display = "none"
@@ -116,8 +116,7 @@ export default class Register extends Component {
                 }
             }
         } else {
-            console.log("Todo lleno");
-            
+            //console.log("Todo lleno");
             //console.log("Manda Request");
             //Request backend
             const res = await axios.post(process.env.REACT_APP_URL_BACKEND + 'register', newRegister)
@@ -125,19 +124,14 @@ export default class Register extends Component {
                 //redirect
                 document.getElementById("modalAccept").style.display = "block"
                 this.setState({ banModal: 1, modalTitle: "Registro Exitoso", modalMsm: "Los datos se han registrado de forma correcta." })
-
-                // window.location.href = '/authentication'
             } else {
                 document.getElementById("modalAccept").style.display = "none"
                 this.setState({ banModal: 0, modalTitle: "Fallo Registro", modalMsm: "Los datos no se han registrado" })
-                // console.log("Credenciales incorrectas");
-
             }
-            console.log(res);
+            //console.log(res);
             //redirect
             //window.location.href = '/'
             //console.log(newRegister);
-            
         }
     }
     onChangeDateBirth = birth => {
@@ -443,24 +437,24 @@ export default class Register extends Component {
 
         let { headers, ban } = this.verifyAccessToken()
         //Exist token on sessionStorage ??
-        console.log(ban);
+        //console.log(ban);
         if (ban === 1) {
-            console.log("nologed sessionStorage Vacio");
+           // console.log("nologed sessionStorage Vacio");
         } else {
             let res = {}
             try {
                 res = await axios.get(process.env.REACT_APP_URL_BACKEND + 'verifytoken', { headers })
                 /////aquii talves enviar el estado de loged o NOLOGED
-                console.log(res);
+                //console.log(res);
             } catch (e) {
-                console.log("errror", e);
+                //console.log("errror", e);
             }
             //si es que el token sigue siendo válido (NO CADUCADO) -> redirigir a home O a PROVATE-PAGE
             //caso contrario (CADUCADO) -> REDIRIGIR A LOGIN O A HOME
             if (res !== {}) {
                 //correct login (success = true)
                 if (res.data.success === true) {  /////aquii talves enviar el estado de loged o NOLOGED
-                    console.log("loged");
+                   // console.log("loged");
                     window.location.href = '/'
                     //desaparecer iniciar sesión
                 } else {

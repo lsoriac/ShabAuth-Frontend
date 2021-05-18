@@ -19,29 +19,28 @@ export default class Autentication extends Component {
             auth: this.state.auth.name,
             content: this.state.content[0]
         }
-
-        //console.log(newMail);
-        //const res2 = await axios.post('http://localhost:4001/authfile', newMail)
-        //console.log("aaaaaaa", res2);
-
     }
     onFileUpload = async e => {
+
         let email = ""
         if (sessionStorage.getItem('param')) {
             let a = JSON.parse(sessionStorage.getItem('param'))
-            email= a.email
-            console.log("Si hay correo");
+            email = a.email
+            //console.log("Si hay correo");
         }
         else {
-            console.log("No hay correo");
+            //console.log("No hay correo");
         }
         var fileInput = document.getElementById('auth');
         var filePath = fileInput.value;
+        //console.log("aaaa",fileInput.size)
+
         var allowedExtensions = /(.shab)$/i;
+        //var imgsize = document.getElementsByClassName("subirimagen")[0].files[0].size;
         if (allowedExtensions.exec(filePath)) {
             document.getElementById('auth').style.borderColor = 'Green'
             document.getElementById('ext_err').style.display = 'None'
-            console.log("Extension válida");
+            //console.log("Extension válida");
 
             // Create an object of formData 
             const formData = new FormData();
@@ -55,40 +54,46 @@ export default class Autentication extends Component {
 
             );
             formData.append("email", email);
-
             // Details of the uploaded file 
-            //console.log(this.state.selectedFile);
-
             // Request made to the backend api 
             // Send formData object 
             let data = {}
             //Request backend
-            const res = await axios.post(process.env.REACT_APP_URL_BACKEND + 'authfile', formData)
-            console.log(res)
-            if (res.data.success === true) {
-                console.log("Ha sido autenticado");
-
-                //create token on local storage
-                data = {
-                    token: res.data.token
-                }
-                sessionStorage.setItem('login', JSON.stringify(data))
-                //redirect
-                window.location.href = '/private-page'
-
+            let res = {}
+            if (this.state.selectedFile.size > 5000) {
+                this.setState({ ext: "El archivo debe pesar menos de 5kb" })
+                document.getElementById('auth').style.borderColor = 'Red'
+                document.getElementById('ext_err').style.display = 'Block'
+               // console.log("Peso no válido");
             } else {
-                console.log("Hubo un error al confirmar el archivo");
+                res = await axios.post(process.env.REACT_APP_URL_BACKEND + 'authfile', formData)
+                //console.log(res)
+                if (res.data.success === true) {
+                   // console.log("Ha sido autenticado");
+                    //create token on local storage
+                    data = {
+                        token: res.data.token
+                    }
+                    sessionStorage.setItem('login', JSON.stringify(data))
+                    //redirect
+                    window.location.href = '/private-page'
+                } else {
+                    this.setState({ ext: "Hubo un error al confirmar el archivo" })
+                    document.getElementById('auth').style.borderColor = 'Red'
+                    document.getElementById('ext_err').style.display = 'Block'
+                   // console.log("Extension no válida");
+                }
             }
         } else {
-            if (this.state.selectedFile){
-                this.setState({ ext: "El archivo "+this.state.selectedFile.name+"no cumple con la extensión solicitada (.shab)" })
-            }else{
+            if (this.state.selectedFile) {
+                this.setState({ ext: "El archivo " + this.state.selectedFile.name + " no cumple con la extensión solicitada (.shab)" })
+            } else {
                 this.setState({ ext: "No ha subido ningun archivo" })
             }
-            
+
             document.getElementById('auth').style.borderColor = 'Red'
             document.getElementById('ext_err').style.display = 'Block'
-            console.log("Extension no válida");
+           // console.log("Extension no válida");
         }
     };
 
@@ -118,24 +123,24 @@ export default class Autentication extends Component {
 
         let { headers, ban } = this.verifyAccessToken()
         //Exist token on sessionStorage ??
-        console.log(ban);
+       // console.log(ban);
         if (ban === 1) {
-            console.log("nologed sessionStorage Vacio");
+            //console.log("nologed sessionStorage Vacio");
         } else {
             let res = {}
             try {
                 res = await axios.get(process.env.REACT_APP_URL_BACKEND + 'verifytoken', { headers })
                 /////aquii talves enviar el estado de loged o NOLOGED
-                console.log(res);
+                //console.log(res);
             } catch (e) {
-                console.log("errror", e);
+                //console.log("errror", e);
             }
             //si es que el token sigue siendo válido (NO CADUCADO) -> redirigir a home O a PROVATE-PAGE
             //caso contrario (CADUCADO) -> REDIRIGIR A LOGIN O A HOME
             if (res !== {}) {
                 //correct login (success = true)
                 if (res.data.success === true) {  /////aquii talves enviar el estado de loged o NOLOGED
-                    console.log("loged");
+                    //console.log("loged");
                     window.location.href = '/'
                     //desaparecer iniciar sesión
                 } else {

@@ -10,21 +10,21 @@ export default class ConfirmAuthentication extends Component {
         if (sessionStorage.getItem('param')) {
             let a = JSON.parse(sessionStorage.getItem('param'))
             email= a.email
-            console.log("Si hay correo");
+            //console.log("Si hay correo");
         }
         else {
-            console.log("No hay correo");
+            //console.log("No hay correo");
         }
         this.setState({account: email})
         let headers = this.verifyAccessToken()
         const res = await axios.get(process.env.REACT_APP_URL_BACKEND + 'verifytoken', {headers})
-        console.log(res);
+        //console.log(res);
         //correct login (success = true)
         if (res.data.success === true) {
             //redirect
             //desaparecer iniciar sesión
         } else {
-            console.log("nologed");
+            //console.log("nologed");
             window.location.href = '/'
         }
         
@@ -68,8 +68,7 @@ export default class ConfirmAuthentication extends Component {
                             
                                     value={this.state.account}
                                     className="form-control"
-                                />
-                                
+                                />   
                             </div>
                         </div>
                 </div>

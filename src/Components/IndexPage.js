@@ -5,22 +5,22 @@ export default class IndexPage extends Component {
         let { headers, ban } = this.verifyAccessToken()
         //Exist token on sessionStorage ??
         if (ban === 1) {
-            console.log("nologed sessionStorage Vacio");
+            //console.log("nologed sessionStorage Vacio");
         } else {
             let res = {}
             try {
                 res = await axios.get(process.env.REACT_APP_URL_BACKEND + 'verifytoken', { headers })
                 /////aquii talves enviar el estado de loged o NOLOGED
-                console.log(res);
+                //console.log(res);
             } catch (e) {
-                console.log("errror", e);
+                //console.log("errror", e);
             }
             //si es que el token sigue siendo válido (NO CADUCADO) -> redirigir a home O a PROVATE-PAGE
             //caso contrario (CADUCADO) -> REDIRIGIR A LOGIN O A HOME
             if (res !== {}) {
                 //correct login (success = true)
                 if (res.data.success === true) {  /////aquii talves enviar el estado de loged o NOLOGED
-                    console.log("loged");
+                   // console.log("loged");
                     //window.location.href = '/'
                     //desaparecer iniciar sesión
                 } else {

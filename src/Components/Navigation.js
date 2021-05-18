@@ -6,7 +6,7 @@ export default class Navigation extends Component {
         let { headers, ban } = this.verifyAccessToken()
         //Exist token on sessionStorage ??
         if (ban === 1) {
-            console.log("nologed sessionStorage Vacio");
+            //console.log("nologed sessionStorage Vacio");
             document.getElementById("login").style.display = "Block"
                     document.getElementById("register").style.display = "Block"
                     document.getElementById("close").style.display = "None"
@@ -15,16 +15,16 @@ export default class Navigation extends Component {
             try {
                 res = await axios.get(process.env.REACT_APP_URL_BACKEND + 'verifytoken', { headers })
                 /////aquii talves enviar el estado de loged o NOLOGED
-                console.log(res);
+                //console.log(res);
             } catch (e) {
-                console.log("errror", e);
+                //console.log("errror", e);
             }
             //si es que el token sigue siendo válido (NO CADUCADO) -> redirigir a home O a PROVATE-PAGE
             //caso contrario (CADUCADO) -> REDIRIGIR A LOGIN O A HOME
             if (res !== {}) {
                 //correct login (success = true)
                 if (res.data.success === true) {  /////aquii talves enviar el estado de loged o NOLOGED
-                    console.log("loged");
+                    //console.log("loged");
                     document.getElementById("login").style.display = "None"
                     document.getElementById("register").style.display = "None"
                     document.getElementById("close").style.display = "Block"
@@ -56,6 +56,7 @@ export default class Navigation extends Component {
     onClickClose = async () => {
         if (sessionStorage.getItem('login')) {
             sessionStorage.removeItem('login');
+            sessionStorage.removeItem('param');
         } else {
             document.getElementById("close").style.display = "none"
         }

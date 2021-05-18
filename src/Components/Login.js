@@ -43,10 +43,10 @@ export default class Login extends Component {
             device,
             browser: parser.getBrowser().name
         }
-        console.log(newLogin);
+        //console.log(newLogin);
         //Request backend
         const res = await axios.post(process.env.REACT_APP_URL_BACKEND + 'login', newLogin)
-        console.log(res.data.success);
+        //console.log(res.data.success);
         //correct login (success = true)
         if (res.data.success === true) {
             /////////////////////////////////////save emaaaaaaaaaaaaaaaaaaaaaaaaaaail
@@ -73,24 +73,24 @@ export default class Login extends Component {
     async componentDidMount() {
         let { headers, ban } = this.verifyAccessToken()
         //Exist token on sessionStorage ??
-        console.log(ban);
+       // console.log(ban);
         if (ban === 1) {
-            console.log("nologed sessionStorage Vacio");
+           // console.log("nologed sessionStorage Vacio");
         } else {
             let res = {}
             try {
                 res = await axios.get(process.env.REACT_APP_URL_BACKEND + 'verifytoken', { headers })
                 /////aquii talves enviar el estado de loged o NOLOGED
-                console.log(res);
+               // console.log(res);
             } catch (e) {
-                console.log("errror", e);
+                //console.log("errror", e);
             }
             //si es que el token sigue siendo válido (NO CADUCADO) -> redirigir a home O a PROVATE-PAGE
             //caso contrario (CADUCADO) -> REDIRIGIR A LOGIN O A HOME
             if (res !== {}) {
                 //correct login (success = true)
                 if (res.data.success === true) {  /////aquii talves enviar el estado de loged o NOLOGED
-                    console.log("loged");
+                    //console.log("loged");
                     window.location.href = '/'
                     //desaparecer iniciar sesión
                 } else {
