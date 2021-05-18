@@ -26,7 +26,15 @@ export default class Autentication extends Component {
 
     }
     onFileUpload = async e => {
-
+        let email = ""
+        if (sessionStorage.getItem('param')) {
+            let a = JSON.parse(sessionStorage.getItem('param'))
+            email= a.email
+            console.log("Si hay correo");
+        }
+        else {
+            console.log("No hay correo");
+        }
         var fileInput = document.getElementById('auth');
         var filePath = fileInput.value;
         var allowedExtensions = /(.shab)$/i;
@@ -46,6 +54,7 @@ export default class Autentication extends Component {
                 this.state.selectedFile.timestamp = Date.now()
 
             );
+            formData.append("email", email);
 
             // Details of the uploaded file 
             //console.log(this.state.selectedFile);
@@ -151,8 +160,6 @@ export default class Autentication extends Component {
         }
         return { headers, ban }
     }
-
-
 
     render() {
         return (

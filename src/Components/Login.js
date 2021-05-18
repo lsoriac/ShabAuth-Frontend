@@ -49,7 +49,12 @@ export default class Login extends Component {
         console.log(res.data.success);
         //correct login (success = true)
         if (res.data.success === true) {
-            //redirect
+            /////////////////////////////////////save emaaaaaaaaaaaaaaaaaaaaaaaaaaail
+            let data = {
+                email: res.data.email
+            }
+            sessionStorage.setItem('param', JSON.stringify(data))
+       
             //redirect
             document.getElementById("modalAccept2").style.display = "block"
             this.setState({ banModal2: 1, modalTitle2: "Credenciales Correctas", modalMsm2: "Se ha enviado un archivo con extensión (.shab) al correo. Verifique." })
@@ -67,10 +72,10 @@ export default class Login extends Component {
     }
     async componentDidMount() {
         let { headers, ban } = this.verifyAccessToken()
-        //Exist token on localStorage ??
+        //Exist token on sessionStorage ??
         console.log(ban);
         if (ban === 1) {
-            console.log("nologed LocalStorage Vacio");
+            console.log("nologed sessionStorage Vacio");
         } else {
             let res = {}
             try {
@@ -99,8 +104,8 @@ export default class Login extends Component {
     verifyAccessToken = () => {
         var headers = {}
         let ban = 0
-        if (localStorage.getItem('login')) {
-            let a = JSON.parse(localStorage.getItem('login'))
+        if (sessionStorage.getItem('login')) {
+            let a = JSON.parse(sessionStorage.getItem('login'))
             headers = {
                 authorization: a.token
             }
