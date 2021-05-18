@@ -22,7 +22,7 @@ export default class Register extends Component {
         etnia: '',
         etnia_list: ["Etnia", "Mestizo", "Mulato", "Morisco", "Castizo", "Zambo", "Blanco", "Cholo", "Otra"],
         gender: '',
-        gender_list: ["Género", "Maculino", "Femenino"],
+        gender_list: ["Género", "Masculino", "Femenino"],
         birth: '',
         nationality: '',
         origin_country: '',
@@ -90,7 +90,6 @@ export default class Register extends Component {
             country: this.state.country,
             city: this.state.city,
             address: this.state.address,
-            password: this.state.password
         }
         var list_fiels_err = []
         console.log(newRegister);
@@ -106,7 +105,7 @@ export default class Register extends Component {
         if (ban === 1) {
             //console.log("Popup de que hay campos sin llenar");
             document.getElementById("modalAccept").style.display = "none"
-            this.setState({ banModal: 0, modalTitle: "Fallo Registro", modalMsm: "Los datos no se han registrado de forma correcta. Por favor revice que todos los campos este llenos" })
+            this.setState({ banModal: 0, modalTitle: "Fallo Registro", modalMsm: "Los datos no se han registrado de forma correcta. Por favor revise que todos los campos este llenos" })
             for (let i in this.state.list_fields) {
                 for (let j = 0; j < list_fiels_err.length; j++) {
                     if (list_fiels_err[j] === this.state.list_fields[i]) {
@@ -117,6 +116,8 @@ export default class Register extends Component {
                 }
             }
         } else {
+            console.log("Todo lleno");
+            
             //console.log("Manda Request");
             //Request backend
             const res = await axios.post(process.env.REACT_APP_URL_BACKEND + 'register', newRegister)
@@ -128,7 +129,7 @@ export default class Register extends Component {
                 // window.location.href = '/authentication'
             } else {
                 document.getElementById("modalAccept").style.display = "none"
-                this.setState({ banModal: 0, modalTitle: "Fallo Registro", modalMsm: "Los datos no se han registrar" })
+                this.setState({ banModal: 0, modalTitle: "Fallo Registro", modalMsm: "Los datos no se han registrado" })
                 // console.log("Credenciales incorrectas");
 
             }
@@ -136,6 +137,7 @@ export default class Register extends Component {
             //redirect
             //window.location.href = '/'
             //console.log(newRegister);
+            
         }
     }
     onChangeDateBirth = birth => {
@@ -438,8 +440,52 @@ export default class Register extends Component {
         for (let i in this.state.list_fields) {
             document.getElementById(this.state.list_fields[i] + '_err').style.display = 'None'
         }
+
+        let { headers, ban } = this.verifyAccessToken()
+        //Exist token on localStorage ??
+        console.log(ban);
+        if (ban === 1) {
+            console.log("nologed LocalStorage Vacio");
+        } else {
+            let res = {}
+            try {
+                res = await axios.get(process.env.REACT_APP_URL_BACKEND + 'verifytoken', { headers })
+                /////aquii talves enviar el estado de loged o NOLOGED
+                console.log(res);
+            } catch (e) {
+                console.log("errror", e);
+            }
+            //si es que el token sigue siendo válido (NO CADUCADO) -> redirigir a home O a PROVATE-PAGE
+            //caso contrario (CADUCADO) -> REDIRIGIR A LOGIN O A HOME
+            if (res !== {}) {
+                //correct login (success = true)
+                if (res.data.success === true) {  /////aquii talves enviar el estado de loged o NOLOGED
+                    console.log("loged");
+                    window.location.href = '/'
+                    //desaparecer iniciar sesión
+                } else {
+                    //redirect
+                }
+            } else {
+
+            }
+        }
     }
 
+    verifyAccessToken = () => {
+        var headers = {}
+        let ban = 0
+        if (localStorage.getItem('login')) {
+            let a = JSON.parse(localStorage.getItem('login'))
+            headers = {
+                authorization: a.token
+            }
+        }
+        else {
+            ban = 1
+        }
+        return { headers, ban }
+    }
     onclickModal(a) {
         if (a === 1) {
             window.location.href = '/login'

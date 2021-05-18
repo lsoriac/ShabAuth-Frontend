@@ -65,6 +65,52 @@ export default class Login extends Component {
 
         }
     }
+    async componentDidMount() {
+        let { headers, ban } = this.verifyAccessToken()
+        //Exist token on localStorage ??
+        console.log(ban);
+        if (ban === 1) {
+            console.log("nologed LocalStorage Vacio");
+        } else {
+            let res = {}
+            try {
+                res = await axios.get(process.env.REACT_APP_URL_BACKEND + 'verifytoken', { headers })
+                /////aquii talves enviar el estado de loged o NOLOGED
+                console.log(res);
+            } catch (e) {
+                console.log("errror", e);
+            }
+            //si es que el token sigue siendo válido (NO CADUCADO) -> redirigir a home O a PROVATE-PAGE
+            //caso contrario (CADUCADO) -> REDIRIGIR A LOGIN O A HOME
+            if (res !== {}) {
+                //correct login (success = true)
+                if (res.data.success === true) {  /////aquii talves enviar el estado de loged o NOLOGED
+                    console.log("loged");
+                    window.location.href = '/'
+                    //desaparecer iniciar sesión
+                } else {
+                    //redirect
+                }
+            } else {
+
+            }
+        }
+    }
+    verifyAccessToken = () => {
+        var headers = {}
+        let ban = 0
+        if (localStorage.getItem('login')) {
+            let a = JSON.parse(localStorage.getItem('login'))
+            headers = {
+                authorization: a.token
+            }
+        }
+        else {
+            ban = 1
+        }
+        return { headers, ban }
+    }
+
     render() {
         return (
             <div className="container p-4" style={{ height: "200px", width: "350px", textAlign: "center" }}>

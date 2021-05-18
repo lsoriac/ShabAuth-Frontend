@@ -9,12 +9,11 @@ export default class ConfirmAuthentication extends Component {
         //correct login (success = true)
         if (res.data.success === true) {
             //redirect
-            
             console.log("loged");
-            window.location.href = '/'
             //desaparecer iniciar sesión
         } else {
-            
+            console.log("nologed");
+            //window.location.href = '/'
         }
     }
     verifyAccessToken = ()=>{
