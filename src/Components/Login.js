@@ -21,7 +21,7 @@ export default class Login extends Component {
     }
     async componentDidMount() {
         //console.log(process.env.REACT_APP_URL_BACKEND);
-        document.getElementById("navigation").style.display = "none"
+        document.getElementById("navigation").style.display = "None"
     }
     onSubmit = async e => {
         e.preventDefault();
@@ -118,7 +118,7 @@ export default class Login extends Component {
 
     render() {
         return (
-            <div className="container p-4" style={{ height: "200px", width: "350px", textAlign: "center" }}>
+            <div className="container-fluid" style={{minHeight: "85vh", width: "350px", textAlign: "center" }}>
                 {/*Modal confirmation*/}
                 <div className="modal fade" id="exampleModal2" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
                     <div className="modal-dialog" role="document">
@@ -138,8 +138,9 @@ export default class Login extends Component {
                         </div>
                     </div>
                 </div>
+                <div className="container p-4" style={{ width: "100%", marginTop: "60px" }}>
                 <span style={{ fontSize: "30px", opacity: "0.6" }}><b>Shab Auth</b></span>
-                <div className="card text-center" style={{ marginTop: "100px", border: "none" }}>
+                <div className="card text-center" style={{ marginTop: "40px", border: "none" }}>
                     <div className="card-header">
                         <h5>Login</h5>
                     </div>
@@ -189,6 +190,9 @@ export default class Login extends Component {
 
                     </form>
                 </div>
+
+                </div>
+                
             </div>
         )
     }

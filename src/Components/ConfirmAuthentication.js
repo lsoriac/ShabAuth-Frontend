@@ -9,15 +9,15 @@ export default class ConfirmAuthentication extends Component {
         let email = ""
         if (sessionStorage.getItem('param')) {
             let a = JSON.parse(sessionStorage.getItem('param'))
-            email= a.email
+            email = a.email
             //console.log("Si hay correo");
         }
         else {
             //console.log("No hay correo");
         }
-        this.setState({account: email})
+        this.setState({ account: email })
         let headers = this.verifyAccessToken()
-        const res = await axios.get(process.env.REACT_APP_URL_BACKEND + 'verifytoken', {headers})
+        const res = await axios.get(process.env.REACT_APP_URL_BACKEND + 'verifytoken', { headers })
         //console.log(res);
         //correct login (success = true)
         if (res.data.success === true) {
@@ -27,32 +27,32 @@ export default class ConfirmAuthentication extends Component {
             //console.log("nologed");
             window.location.href = '/'
         }
-        
-        this.setState({account: email})
+
+        this.setState({ account: email })
     }
-    verifyAccessToken = ()=>{
-        var headers ={}
+    verifyAccessToken = () => {
+        var headers = {}
         if (sessionStorage.getItem('login')) {
             let a = JSON.parse(sessionStorage.getItem('login'))
             headers = {
-                authorization: a.token 
+                authorization: a.token
             }
         }
-        else{
+        else {
         }
         return headers
     }
     render() {
 
-       
+
         return (
-            <div className="container p-4" style={{ height: "200px", width: "350px", textAlign: "center" }}>
-                
-                <span style={{ fontSize: "30px", opacity: "0.6" }}><b>Shab Auth</b></span>
-                <div className="card text-center" style={{ marginTop: "100px", border: "none" }}>
-                    <div className="card-header">
-                        <h5>Bienvenido</h5>
-                    </div>
+            <div className="container-fluid" style={{ minHeight: "85vh", height: "200px", width: "360px", textAlign: "center" }}>
+                <div className="container p-4" style={{ width: "100%", marginTop: "100px" }}>
+                    <span style={{ fontSize: "30px", opacity: "0.6" }}><b>Shab Auth</b></span>
+                    <div className="card text-center" style={{ marginTop: "100px", border: "none" }}>
+                        <div className="card-header">
+                            <h5>Bienvenido</h5>
+                        </div>
 
                         <div className="card-body">
                             <div className="input-group mb-2" style={{ marginTop: "30px" }}>
@@ -65,12 +65,13 @@ export default class ConfirmAuthentication extends Component {
                                     id="account"
                                     name="account"
                                     type="text"
-                            
+                                    disabled
                                     value={this.state.account}
                                     className="form-control"
-                                />   
+                                />
                             </div>
                         </div>
+                    </div>
                 </div>
             </div>
         )

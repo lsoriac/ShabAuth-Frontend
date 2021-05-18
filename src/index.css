@@ -15,9 +15,6 @@ footer {
     font-size: 14px;
     text-align: center;
     bottom: 0;
-    height: 100px;
-}
-
-.edit {
-    color: white;
+    height: 20%;
+    position: relative;
 }

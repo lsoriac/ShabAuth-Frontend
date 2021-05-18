@@ -119,6 +119,7 @@ export default class Autentication extends Component {
         this.setState({ content: contenido })
     }
     async componentDidMount() {
+        document.getElementById("navigation").style.display = "none"
         document.getElementById('ext_err').style.display = 'None'
 
         let { headers, ban } = this.verifyAccessToken()
@@ -168,8 +169,10 @@ export default class Autentication extends Component {
 
     render() {
         return (
-            <div className="container p-4" style={{ height: "200px", width: "322px", marginTop: "150px", marginBottom: "370px" }}>
-                <div className="card text-center">
+            <div className="container-fluid" style={{minHeight: "85vh", height: "200px", width: "350px", textAlign: "center" }}>
+                 <div className="container p-4" style={{ width: "100%", marginTop: "60px" }}>
+                <span style={{ fontSize: "30px", opacity: "0.6" }}><b>Shab Auth</b></span>
+                <div className="card text-center" style={{ marginTop: "40px", border: "none" }}>
                     <div className="card-header">
                         <h4>Autenticación</h4>
                     </div>
@@ -203,6 +206,7 @@ export default class Autentication extends Component {
                         </div>
                     </form>
                 </div>
+                </div> 
             </div>
         )
     }
