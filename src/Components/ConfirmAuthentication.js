@@ -9,17 +9,16 @@ export default class ConfirmAuthentication extends Component {
         //correct login (success = true)
         if (res.data.success === true) {
             //redirect
-            console.log("loged");
             //desaparecer iniciar sesión
         } else {
             console.log("nologed");
-            //window.location.href = '/'
+            window.location.href = '/'
         }
     }
     verifyAccessToken = ()=>{
         var headers ={}
-        if (localStorage.getItem('login')) {
-            let a = JSON.parse(localStorage.getItem('login'))
+        if (sessionStorage.getItem('login')) {
+            let a = JSON.parse(sessionStorage.getItem('login'))
             headers = {
                 authorization: a.token 
             }

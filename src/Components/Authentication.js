@@ -63,7 +63,7 @@ export default class Autentication extends Component {
                 data = {
                     token: res.data.token
                 }
-                localStorage.setItem('login', JSON.stringify(data))
+                sessionStorage.setItem('login', JSON.stringify(data))
                 //redirect
                 window.location.href = '/private-page'
 
@@ -108,10 +108,10 @@ export default class Autentication extends Component {
         document.getElementById('ext_err').style.display = 'None'
 
         let { headers, ban } = this.verifyAccessToken()
-        //Exist token on localStorage ??
+        //Exist token on sessionStorage ??
         console.log(ban);
         if (ban === 1) {
-            console.log("nologed LocalStorage Vacio");
+            console.log("nologed sessionStorage Vacio");
         } else {
             let res = {}
             try {
@@ -140,8 +140,8 @@ export default class Autentication extends Component {
     verifyAccessToken = () => {
         var headers = {}
         let ban = 0
-        if (localStorage.getItem('login')) {
-            let a = JSON.parse(localStorage.getItem('login'))
+        if (sessionStorage.getItem('login')) {
+            let a = JSON.parse(sessionStorage.getItem('login'))
             headers = {
                 authorization: a.token
             }

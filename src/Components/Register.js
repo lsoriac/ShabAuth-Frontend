@@ -442,10 +442,10 @@ export default class Register extends Component {
         }
 
         let { headers, ban } = this.verifyAccessToken()
-        //Exist token on localStorage ??
+        //Exist token on sessionStorage ??
         console.log(ban);
         if (ban === 1) {
-            console.log("nologed LocalStorage Vacio");
+            console.log("nologed sessionStorage Vacio");
         } else {
             let res = {}
             try {
@@ -475,8 +475,8 @@ export default class Register extends Component {
     verifyAccessToken = () => {
         var headers = {}
         let ban = 0
-        if (localStorage.getItem('login')) {
-            let a = JSON.parse(localStorage.getItem('login'))
+        if (sessionStorage.getItem('login')) {
+            let a = JSON.parse(sessionStorage.getItem('login'))
             headers = {
                 authorization: a.token
             }
